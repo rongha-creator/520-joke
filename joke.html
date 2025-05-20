@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 必需Meta标签 -->
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- 防止微信缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>520特别惊喜</title>
+
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            animation: fadeIn 1s;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        p {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: white;
+            color: #ff6b6b;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .heart {
+            font-size: 100px;
+            animation: heartbeat 1.5s infinite;
+            margin: 20px 0;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* 微信提示专用样式 */
+        .weixin-tip {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .weixin-tip img {
+            width: 150px;
+            margin-bottom: 30px;
+        }
+
+        .weixin-tip p {
+            color: white;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 微信提示层（默认隐藏） -->
+    <div id="weixinTip" class="weixin-tip">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTQxNiAxMjhIMTYwYy0xNy42NyAwLTMyIDE0LjMzLTMyIDMydjE5MmMwIDE3LjY3IDE0LjMzIDMyIDMyIDMyaDI1NnYtNjRIMTc2VjE2MGgyNDB2LTMyem0wIDEyOEgyNTZ2NjRoMTYwVjI1NnoiLz48L3N2Zz4=" alt="浏览器图标">
+        <p>检测到微信浏览器访问</p>
+        <p>请点击右上角 <strong>⋯</strong> 按钮</p>
+        <p>选择 <strong>"在浏览器打开"</strong></p>
+        <a href="#" id="directLink" class="btn">点击直接跳转</a>
+    </div>
+
+    <!-- 主内容（默认显示） -->
+    <div class="container" id="mainContent">
+        <div class="heart">💔</div>
+        <h1>没想到吧？</h1>
+        <p>这是一个520特别整蛊页面</p>
+        <p>单身贵族专属福利！</p>
+
+        <!-- 音效触发按钮 -->
+        <button id="playBtn" class="btn">点击有惊喜</button>
+
+        <!-- 隐藏的整蛊内容 -->
+        <div id="jokeContent" style="display:none; margin-top:30px;">
+            <img src="https://media.giphy.com/media/l0HU7JI1QOfpXbW3K/giphy.gif" width="200">
+            <p style="font-size:24px; margin-top:20px;">哈哈哈哈你被整了！</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 微信环境检测 ====================
+        const isWeixin = () => /MicroMessenger/i.test(navigator.userAgent);
+
+        // ==================== 页面加载逻辑 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 微信环境下显示提示层
+            if (isWeixin()) {
+                document.getElementById('weixinTip').style.display = 'flex';
+                document.getElementById('mainContent').style.display = 'none';
+
+                // 设置直接跳转链接（解决微信第一次打不开的问题）
+                const currentUrl = window.location.href;
+                document.getElementById('directLink').href =
+                    currentUrl.includes('?') ? currentUrl + '&t=' + Date.now() : currentUrl + '?t=' + Date.now();
+            }
+
+            // 添加音效（需要用户交互后才能播放）
+            const playBtn = document.getElementById('playBtn');
+            const jokeContent = document.getElementById('jokeContent');
+
+            playBtn.addEventListener('click', function() {
+                // 播放音效
+                const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                audio.play().catch(e => console.log('音效播放失败:', e));
+
+                // 显示整蛊内容
+                jokeContent.style.display = 'block';
+                playBtn.textContent = '再点一次试试';
+
+                // 添加彩色纸屑效果
+                createConfetti();
+            });
+        });
+
+        // ==================== 彩色纸屑效果 ====================
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.zIndex = '999';
+
+                // 动画
+                const animation = confetti.animate([
+                    { top: '-10px', opacity: 1 },
+                    { top: '100vh', opacity: 0 }
+                ], {
+                    duration: 2000 + Math.random() * 3000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.9, 1)'
+                });
+
+                document.body.appendChild(confetti);
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+
+        // ==================== 微信URL缓存解决方案 ====================
+        if (isWeixin() && !window.location.search) {
+            window.location.search = '?t=' + Date.now();
+        }
+    </script>
+</body>
+</html>
